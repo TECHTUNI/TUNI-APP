@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 //collections
-final CollectionReference clothFirestoreCollection = FirebaseFirestore.instance.collection('Clothes');
+// final CollectionReference clothFirestoreCollection = FirebaseFirestore.instance.collection('Clothes');
 
 
 
 //documents
-final  menDocument = clothFirestoreCollection.doc('products');
+// final  menDocument = clothFirestoreCollection.doc('products');
 
 
 

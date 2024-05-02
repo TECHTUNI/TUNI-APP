@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -184,8 +182,7 @@ class AddProduct extends StatelessWidget {
     selected_design = provider.selecteddesign;
     selectedpant = provider.selectedpant;
     selected_gender = provider.Selectedgender;
-    debugPrint("category: $cat");
-    debugPrint("type:$type");
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 250),
       child: SingleChildScrollView(
@@ -212,7 +209,7 @@ class AddProduct extends StatelessWidget {
                                 return ElevatedButton(
                                   onPressed: () async {
                                     // image.pickImage();
-                                    image.imageUrls;
+
                                     imageUrls =
                                         await image.uploadImagesToFireStore(
                                             productNameController.text);
@@ -629,11 +626,13 @@ class AddProduct extends StatelessWidget {
                                     productNameController,
                                     brandNameController,
                                     productPriceController,
-                                    imageUrls,
+                                    image.imageUrls,
                                     quantityController,
                                     colorController,
                                     selected_gender,
-                                    cat);
+                                    cat,
+                                    type,
+                                    selected_design);
                                 // image.clearImageList();
                                 product.selectedSizes.clear();
                               }

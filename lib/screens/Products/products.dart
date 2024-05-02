@@ -80,7 +80,11 @@ class ProductsPage extends StatelessWidget {
                     builder: (BuildContext context, image, Widget? child) {
                       return StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
-                            .collection("Clothes")
+                            .collection("clothes")
+                            .doc("Men")
+                            .collection("Shirt")
+                            .doc("full sleve")
+                            .collection("Plain")
                             .snapshots(),
                         builder: (
                           BuildContext context,

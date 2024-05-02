@@ -1,16 +1,1 @@
-{
-  "hosting": {
-    "public": "build/web",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }
-}
+{"hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]},"flutter":{"platforms":{"android":{"default":{"projectId":"tunitest-e022d","appId":"1:41399715162:android:7919ccd766e6c6cc161f63","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"tunitest-e022d","configurations":{"android":"1:41399715162:android:7919ccd766e6c6cc161f63","ios":"1:41399715162:ios:3572bebc37d8a55a161f63","macos":"1:41399715162:ios:3572bebc37d8a55a161f63","web":"1:41399715162:web:33487689aaadeeee161f63","windows":"1:41399715162:web:21c0c77d7f23bd7b161f63"}}}}}}

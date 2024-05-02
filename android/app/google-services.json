@@ -1,32 +1,13 @@
 {
   "project_info": {
-    "project_number": "927735133078",
-    "project_id": "tuni-11553",
-    "storage_bucket": "tuni-11553.appspot.com"
+    "project_number": "41399715162",
+    "project_id": "tunitest-e022d",
+    "storage_bucket": "tunitest-e022d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:927735133078:android:ca726f7938dfd4f06b23b7",
-        "android_client_info": {
-          "package_name": "com.example.tuni"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDxOQMY_JMmZKJMn9IgzU2WFXhYpX1EMFU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:927735133078:android:7b490be8ccfc46236b23b7",
+        "mobilesdk_app_id": "1:41399715162:android:7919ccd766e6c6cc161f63",
         "android_client_info": {
           "package_name": "com.example.tuni_web"
         }
@@ -34,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDxOQMY_JMmZKJMn9IgzU2WFXhYpX1EMFU"
+          "current_key": "AIzaSyDXykFq1btawxYsaP6Bp2tXXSPkEN5GDLs"
         }
       ],
       "services": {

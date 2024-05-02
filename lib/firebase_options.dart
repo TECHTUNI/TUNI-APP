@@ -21,25 +21,13 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -53,12 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyChX3kArsSX1e4m3-UddO_BGU9N-2ff4Vg',
-    appId: '1:682471459218:web:6a866486072615ce02994b',
-    messagingSenderId: '682471459218',
-    projectId: 'tuni-c0211',
-    authDomain: 'tuni-c0211.firebaseapp.com',
-    storageBucket: 'tuni-c0211.appspot.com',
-    measurementId: 'G-JM7Y854N66',
+    apiKey: 'AIzaSyA9WZnlm6mgSpvACbJDVVDRoTb4B757_FA',
+    appId: '1:41399715162:web:33487689aaadeeee161f63',
+    messagingSenderId: '41399715162',
+    projectId: 'tunitest-e022d',
+    authDomain: 'tunitest-e022d.firebaseapp.com',
+    storageBucket: 'tunitest-e022d.appspot.com',
+    measurementId: 'G-Q0F89BZYTR',
   );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBKb5y0HKOqygYuEsGpvF41BCksVUxqDi8',
+    appId: '1:41399715162:ios:3572bebc37d8a55a161f63',
+    messagingSenderId: '41399715162',
+    projectId: 'tunitest-e022d',
+    storageBucket: 'tunitest-e022d.appspot.com',
+    iosBundleId: 'com.example.tuniWeb',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBKb5y0HKOqygYuEsGpvF41BCksVUxqDi8',
+    appId: '1:41399715162:ios:3572bebc37d8a55a161f63',
+    messagingSenderId: '41399715162',
+    projectId: 'tunitest-e022d',
+    storageBucket: 'tunitest-e022d.appspot.com',
+    iosBundleId: 'com.example.tuniWeb',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyDXykFq1btawxYsaP6Bp2tXXSPkEN5GDLs',
+    appId: '1:41399715162:android:7919ccd766e6c6cc161f63',
+    messagingSenderId: '41399715162',
+    projectId: 'tunitest-e022d',
+    storageBucket: 'tunitest-e022d.appspot.com',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyA9WZnlm6mgSpvACbJDVVDRoTb4B757_FA',
+    appId: '1:41399715162:web:21c0c77d7f23bd7b161f63',
+    messagingSenderId: '41399715162',
+    projectId: 'tunitest-e022d',
+    authDomain: 'tunitest-e022d.firebaseapp.com',
+    storageBucket: 'tunitest-e022d.appspot.com',
+    measurementId: 'G-76RT20T0W4',
+  );
+
 }

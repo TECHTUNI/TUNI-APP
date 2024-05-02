@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuni_web/provider/navigation_provider.dart';
+import 'package:tuni_web/provider/product_provider.dart';
 import 'package:tuni_web/screens/Dashboard/dashboard.dart';
 import 'package:tuni_web/screens/Products/products.dart';
 import 'package:tuni_web/screens/Settings/settings.dart';

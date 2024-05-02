@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tuni_web/screens/Products/add_products_refactor.dart';
+
+import '../../provider/product_provider.dart';
 
 class AddProductToFirestore extends StatelessWidget {
   AddProductToFirestore({super.key});
@@ -14,6 +17,8 @@ class AddProductToFirestore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final productprovider = Provider.of<ProductProvider>(context);
+    productprovider.fetchallProducts();
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(

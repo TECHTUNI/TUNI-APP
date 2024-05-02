@@ -334,17 +334,17 @@ class EditProduct extends StatelessWidget {
                                       builder: (context) => const SideNavPage(),
                                     ),
                                     (route) => false);
-                                await product.editProductDetailToFireStore(
-                                    id,
-                                    productNameController,
-                                    brandNameController,
-                                    productPriceController,
-                                    existingList,
-                                    quantityController,
-                                    colorController,
-                                    genderController,
-                                    categoryController);
-                                image.clearImageList();
+                                // await product.editProductDetailToFireStore(
+                                //     id,
+                                //     productNameController,
+                                //     brandNameController,
+                                //     productPriceController,
+                                //     existingList,
+                                //     quantityController,
+                                //     colorController,
+                                //     genderController,
+                                //     categoryController);
+                                // image.clearImageList();
                                 product.selectedSizes.clear();
                               }
                             },

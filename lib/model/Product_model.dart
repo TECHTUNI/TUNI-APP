@@ -22,4 +22,34 @@ class Productdetails {
     required this.color,
     required this.size,
   });
+
+  factory Productdetails.fromJson(Map<String, dynamic> json) {
+    return Productdetails(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      brand: json['brand'] ?? '',
+      gender: json['gender'] ?? '',
+      price: json['price'] ?? '',
+      time: json['time'] ?? '',
+      imageUrlList: json['imageUrl'] ?? [],
+      quantity: json['Quantity'] ?? '',
+      color: json['color'] ?? '',
+      size: json['size'] ?? [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'brand': brand,
+      'gender': gender,
+      'price': price,
+      'time': time,
+      'imageUrl': imageUrlList,
+      'Quantity': quantity,
+      'color': color,
+      'size': size,
+    };
+  }
 }

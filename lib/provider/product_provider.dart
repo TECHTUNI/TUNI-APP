@@ -1,16 +1,33 @@
+import 'dart:html';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tuni_web/screens/Products/products_detail_page.dart';
 import '../firebase/firestore.dart';
+import '../model/Product_model.dart';
 
 class ProductProvider extends ChangeNotifier {
   ProductImageProvider imageProvider = ProductImageProvider();
 
   List<String> itemTypesList = ["Pant", "Shirt", "T-shirt", "Shorts"];
   List<String> gendersList = ["Men", "Women", "Kids"];
+  final List<String> pants = [
+    "Jogger",
+    "Six pocket",
+    "Jeans",
+  ];
+  final List<String> types = [
+    "full sleve",
+    "half sleve",
+    "collar",
+    "round neck",
+    "v-neck",
+  ];
+  final List<String> design = ["Plain", "Printed", "check"];
 
   String? selectedValue;
   String? selectedGender;
@@ -44,18 +61,146 @@ class ProductProvider extends ChangeNotifier {
     return gender;
   }
 
-  //function to add product detail to firestore after adding images to firebase storage.
+  Future<List<Productdetails>> fetchallProducts() async {
+    try {
+      List<Productdetails> products = [];
+
+      // Define arrays for collections and documents
+      List<String> genderList = ["Men", "Women", "Kids"];
+      List<String> categoryList = ["Shirt", "Pant", "T-shirt", "Shorts"];
+      List<String> typeList = [
+        "full sleve",
+        "half sleve",
+        "collar",
+        "round neck",
+        "v-neck"
+      ];
+      List<String> designList = ["Plain", "Printed", "check"];
+
+      List<String> pants = ["Jogger", "Six pocket", "Jeans"];
+
+      // Iterate through each combination of collections and documents
+      for (String gender in genderList) {
+        for (String category in categoryList) {
+          for (String type in typeList) {
+            for (String design in designList) {
+              // Construct the Firestore path
+              QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                  .collection("clothes")
+                  .doc(gender)
+                  .collection(category)
+                  .doc(type)
+                  .collection(design)
+                  .get();
+
+              // Process the documents in the query snapshot
+              querySnapshot.docs.forEach((doc) {
+                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                Productdetails product = Productdetails(
+                  id: data['id'].toString(),
+                  name: data['name'].toString(),
+                  brand: data['brand'].toString(),
+                  gender: data['gender'].toString(),
+                  price: data['price'].toString(),
+                  time: data['time'].toString(),
+                  imageUrlList: List<String>.from(data['imageUrl'] ?? []),
+                  quantity: data['Quantity'].toString(),
+                  color: data['color'].toString(),
+                  size: List<String>.from(data['size'] ?? []),
+                );
+                products.add(product);
+                for (int i = 0; i <= products.length; i++) {
+                  print(product.name);
+                }
+              });
+            }
+          }
+        }
+      }
+
+      return products;
+    } catch (e) {
+      print("Error fetching products: $e");
+      throw e; // Rethrow the error to handle it in the calling code
+    }
+  }
+
+  // Future<List<Productdetails>> fetchallProducts() async {
+  //   try {
+  //     List<Productdetails> products = [];
+
+  //     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  //         .collection("clothes")
+  //         .doc("Men")
+  //         .collection("Shirt")
+  //         .doc("full sleve")
+  //         .collection("Plain")
+  //         .get();
+
+  //     print('query snaa${querySnapshot.docs}');
+  //     querySnapshot.docs.forEach((doc) {
+  //       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+  //       Productdetails product = Productdetails(
+  //         id: data['id'].toString(),
+  //         name: data['name'].toString(),
+  //         brand: data['brand'].toString(),
+  //         gender: data['gender'].toString(),
+  //         price: data['price'].toString(),
+  //         time: data['time'].toString(),
+  //         imageUrlList: List<String>.from(data['imageUrl'] ?? []),
+  //         quantity: data['Quantity'].toString(),
+  //         color: data['color'].toString(),
+  //         size: List<String>.from(data['size'] ?? []),
+  //       );
+  //       products.add(product);
+  //       print(products[0].brand);
+  //     });
+
+  //     return products;
+  //   } catch (e) {
+  //     print("Error fetching products: $e");
+  //     throw e; // Rethrow the error to handle it in the calling code
+  //   }
+  // }
+
+  // Future<List<Productdetails>> fetchallProducts() async {
+  //   try {
+  //     List<Productdetails> products = [];
+
+  //     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  //         .collection("clothes")
+  //         .doc("Men")
+  //         .collection("Shirt")
+  //         .doc("full sleve")
+  //         .collection("plain")
+  //         .get();
+
+  //     querySnapshot.docs.forEach((doc) {
+  //       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+  //       Productdetails product = Productdetails.fromJson(data);
+  //       products.add(product);
+  //     });
+
+  //     return products;
+  //   } catch (e) {
+  //     print("Error fetching products: $e");
+  //     throw e; // Rethrow the error to handle it in the calling code
+  //   }
+  // }
+
   Future<void> addProductDetailToFireStore(
-      TextEditingController productName,
-      TextEditingController brandName,
-      TextEditingController productPrice,
-      List<String> imageUrls,
-      TextEditingController quantity,
-      TextEditingController color,
-      String gender,
-      String category
-      // List<String> selectedSizes,
-      ) async {
+    TextEditingController productName,
+    TextEditingController brandName,
+    TextEditingController productPrice,
+    List<String> imageUrls,
+    TextEditingController quantity,
+    TextEditingController color,
+    String gender,
+    String category,
+    String design,
+    String type,
+  ) async {
+    print('hiiiiiiiiiiiiiiiii$imageUrls');
     String selectedGender =
         gender[0].toUpperCase() + gender.substring(1).toLowerCase();
     String selectedCategory =
@@ -66,11 +211,18 @@ class ProductProvider extends ChangeNotifier {
         DateFormat('dd/MM/yyyy').format(currentDate).toString();
 
     final int id = DateTime.now().millisecondsSinceEpoch;
-    await clothFirestoreCollection.doc(id.toString()).set({
+
+    await FirebaseFirestore.instance
+        .collection("clothes")
+        .doc(gender.toString())
+        .collection(selectedCategory.toString())
+        .doc(design.toString())
+        .collection(type.toString())
+        .doc(id.toString())
+        .set({
       "id": id.toString().trim(),
       "name": productName.text.trim(),
       "gender": selectedGender.trim(),
-      "category": selectedCategory.trim(),
       "brand": brandName.text.trim(),
       "price": productPrice.text.trim(),
       "imageUrl": imageUrls,
@@ -79,45 +231,121 @@ class ProductProvider extends ChangeNotifier {
       "Quantity": quantity.text.trim(),
       "color": color.text.trim(),
     });
+
     imageUrls.clear();
   }
 
-  Future<void> editProductDetailToFireStore(
-      String id,
-      TextEditingController productName,
-      TextEditingController brandName,
-      TextEditingController productPrice,
-      List imageUrls,
-      TextEditingController quantity,
-      TextEditingController color,
-      TextEditingController gender,
-      TextEditingController category
-      // List<String> selectedSizes,
-      ) async {
-    String selectedGender =
-        gender.text[0].toUpperCase() + gender.text.substring(1).toLowerCase();
-    String selectedCategory = category.text[0].toUpperCase() +
-        category.text.substring(1).toLowerCase();
-    final currentDate = DateTime.now();
-    String formattedDate =
-        DateFormat('dd/MM/yyyy').format(currentDate).toString();
+  // Future<void> addProductDetailToFireStore(
+  //   TextEditingController productName,
+  //   TextEditingController brandName,
+  //   TextEditingController productPrice,
+  //   List<String> imageUrls,
+  //   TextEditingController quantity,
+  //   TextEditingController color,
+  //   String gender,
+  //   String category,
+  //   String design,
+  //   String type,
+  // ) async {
+  //   print('typeeeeeeeeeeeee${type}');
+  //   // Capitalize the first letter of gender and category
+  //   String selectedGender =
+  //       gender[0].toUpperCase() + gender.substring(1).toLowerCase();
+  //   String selectedCategory =
+  //       category[0].toUpperCase() + category.substring(1).toLowerCase();
 
-    // final int id = DateTime.now().millisecondsSinceEpoch;
-    await clothFirestoreCollection.doc(id).update({
-      "id": id.toString().trim(),
-      "name": productName.text.trim(),
-      "gender": selectedGender.trim(),
-      "category": selectedCategory.trim(),
-      "brand": brandName.text.trim(),
-      "price": productPrice.text.trim(),
-      "imageUrl": imageUrls,
-      "time": formattedDate,
-      "size": selectedSize,
-      "Quantity": quantity.text.trim(),
-      "color": color.text.trim()
-    });
-    imageUrls.clear();
-  }
+  //   // Get the current date and format it
+  //   final currentDate = DateTime.now();
+  //   String formattedDate =
+  //       DateFormat('dd/MM/yyyy').format(currentDate).toString();
+
+  //   // Generate a unique ID for the product
+  //   final int id = DateTime.now().millisecondsSinceEpoch;
+
+  //   // Create the product details map
+  //   Map<String, dynamic> productDetails = {
+  //     "id": id.toString(),
+  //     "name": productName.text.trim(),
+  //     "gender": selectedGender.trim(),
+  //     "brand": brandName.text.trim(),
+  //     "price": productPrice.text.trim(),
+  //     "imageUrl": imageUrls,
+  //     "time": formattedDate,
+  //     "size": selectedSize, // Assuming selectedSize is defined elsewhere
+  //     "Quantity": quantity.text.trim(),
+  //     "color": color.text.trim(),
+  //   };
+
+  //  Map<String, dynamic> designMAp{
+
+  //  }
+
+  //   Map<String, dynamic> typeMap = {
+  //     type: {
+  //       design: [productDetails]
+  //     }
+  //   };
+
+  //   Map<String, dynamic> categoryMap = {
+  //     category: typeMap,
+  //   };
+
+  //   Map<String, dynamic> genderMap = {
+  //     selectedGender: categoryMap,
+  //   };
+
+  //   // Add the product to Firestore
+  //   await FirebaseFirestore.instance
+  //       .collection("clotheu")
+  //       .doc(selectedGender)
+  //       .set(genderMap, SetOptions(merge: true));
+
+  //   // Clear the list of image URLs after adding the product
+  //   imageUrls.clear();
+  // }
+
+  // Future<void> editProductDetailToFireStore(
+  //     String id,
+  //     TextEditingController productName,
+  //     TextEditingController brandName,
+  //     TextEditingController productPrice,
+  //     List imageUrls,
+  //     TextEditingController quantity,
+  //     TextEditingController color,
+  //     TextEditingController gender,
+  //     TextEditingController category
+  //     // List<String> selectedSizes,
+  //     ) async {
+  //   String selectedGender =
+  //       gender.text[0].toUpperCase() + gender.text.substring(1).toLowerCase();
+  //   String selectedCategory = category.text[0].toUpperCase() +
+  //       category.text.substring(1).toLowerCase();
+  //   final currentDate = DateTime.now();
+  //   String formattedDate =
+  //       DateFormat('dd/MM/yyyy').format(currentDate).toString();
+
+  //   // final int id = DateTime.now().millisecondsSinceEpoch;
+  //  await FirebaseFirestore.instance
+  //       .collection("clothes")
+  //       .doc(gender.toString())
+  //       .collection(selectedCategory.toString())
+  //       .doc(design.toString())
+  //       .collection(type.toString())
+  //       .doc(id.toString()) .doc(id).update({
+  //     "id": id.toString().trim(),
+  //     "name": productName.text.trim(),
+  //     "gender": selectedGender.trim(),
+  //     "category": selectedCategory.trim(),
+  //     "brand": brandName.text.trim(),
+  //     "price": productPrice.text.trim(),
+  //     "imageUrl": imageUrls,
+  //     "time": formattedDate,
+  //     "size": selectedSize,
+  //     "Quantity": quantity.text.trim(),
+  //     "color": color.text.trim()
+  //   });
+  //   imageUrls.clear();
+  // }
 
   Future<void> fetchData({
     required String id,
@@ -130,7 +358,7 @@ class ProductProvider extends ChangeNotifier {
     required TextEditingController categoryController,
   }) async {
     DocumentSnapshot documentSnapshot =
-        await FirebaseFirestore.instance.collection("Clothes").doc(id).get();
+        await FirebaseFirestore.instance.collection("Cloth").doc(id).get();
     final String name = documentSnapshot['name'];
     final String brandName = documentSnapshot['brand'];
     final String color = documentSnapshot['color'];
@@ -198,21 +426,6 @@ class ProductImageProvider extends ChangeNotifier {
   final List<String> imageUrls = [];
   List<String> existingImage = [];
 
-  // Future<void> pickImage() async {
-  //   try {
-  //     final FilePickerResult? result = await FilePicker.platform
-  //         .pickFiles(type: FileType.image, allowMultiple: true);
-  //     if (result != null) {
-  //       List<Uint8List?> imageDataList =
-  //           result.files.map((file) => file.bytes).toList();
-  //       _imageData.addAll(imageDataList);
-  //       notifyListeners();
-  //     }
-  //   } catch (e) {
-  //     throw e.toString();
-  //   }
-  // }
-
   Future<List<String>> fetchImageFromFireStore(String id) async {
     final DocumentSnapshot documentSnapshot =
         await FirebaseFirestore.instance.collection('Clothes').doc(id).get();
@@ -224,24 +437,6 @@ class ProductImageProvider extends ChangeNotifier {
     }
   }
 
-  //Upload imageList to firebase storage
-  // Future<List<String>> uploadImagesToFireStore(String productName) async {
-  //   final FilePickerResult? result = await FilePicker.platform
-  //       .pickFiles(type: FileType.image, allowMultiple: true);
-  //   if (result != null) {
-  //     for (int i = 0; i < result.files.length; i++) {
-  //       Uint8List? imageData = result.files[i].bytes;
-  //       String imageName = '${productName}_$i';
-
-  //       String imageUrl =
-  //           await addImageUrlToFirebaseStorge(imageData!, imageName);
-  //       imageUrls.add(imageUrl);
-  //       notifyListeners();
-  //     }
-  //   }
-  //   notifyListeners();
-  //   return imageUrls;
-  // }
   Future<List<String>> uploadImagesToFireStore(String productName) async {
     final FilePickerResult? result = await FilePicker.platform
         .pickFiles(type: FileType.image, allowMultiple: true);
@@ -253,15 +448,16 @@ class ProductImageProvider extends ChangeNotifier {
 
         String imageUrl =
             await addImageUrlToFirebaseStorge(imageData!, imageName);
-        imageUrls.add(imageUrl); // Append the new URL to the list
+        imageUrls.add(imageUrl);
         notifyListeners();
       }
     }
-    return imageUrls; // Return the updated list after all images are uploaded
+    return imageUrls;
   }
 
   Future<String> addImageUrlToFirebaseStorge(
       Uint8List imageData, String imageName) async {
+    print('image url$imageName');
     final firebase_storage.Reference ref = firebase_storage
         .FirebaseStorage.instance
         .ref('/product_images/$imageName');
