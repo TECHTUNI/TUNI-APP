@@ -37,7 +37,7 @@ Widget tableRowProductListing(
     required String price,
     required List<dynamic> imageUrlList,
     required List<dynamic> sizes,
-    required Function(String id) deleteProduct,
+    // required Function(String id) deleteProduct,
     required double screenWidth,
     required double screenHeight}) {
   TableRow tableRow = TableRow(children: <Widget>[
@@ -92,7 +92,7 @@ Widget tableRowProductListing(
                           TextButton(
                               onPressed: () async {
                                 Navigator.pop(context);
-                                await deleteProduct(id);
+                                // await deleteProduct(id);
                               },
                               child: const Text(
                                 "Delete",
@@ -618,8 +618,7 @@ class AddProduct extends StatelessWidget {
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ProductsPage(),
+                                      builder: (context) => ProductsPage(),
                                     ),
                                     (route) => false);
                                 await product.addProductDetailToFireStore(

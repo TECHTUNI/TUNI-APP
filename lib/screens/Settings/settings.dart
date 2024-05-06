@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tuni_web/provider/product_provider.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -15,9 +17,7 @@ class SettingsPage extends StatelessWidget {
         children: <Widget>[
           ListTile(
             title: Text('Account Settings'),
-            onTap: () {
-              // Add functionality to navigate to account settings
-            },
+            onTap: () {},
           ),
           ListTile(
             title: Text('Notification Settings'),

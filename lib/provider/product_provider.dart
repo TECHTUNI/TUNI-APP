@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tuni_web/model/testmodel.dart';
 import 'package:tuni_web/screens/Products/products_detail_page.dart';
 import '../firebase/firestore.dart';
 import '../model/Product_model.dart';
@@ -13,7 +14,7 @@ import '../model/Product_model.dart';
 class ProductProvider extends ChangeNotifier {
   ProductImageProvider imageProvider = ProductImageProvider();
 
-  List<String> itemTypesList = ["Pant", "Shirt", "T-shirt", "Shorts"];
+  List<String> itemTypesList = ["Pant", "Shirt", "Tshirt", "Short"];
   List<String> gendersList = ["Men", "Women", "Kids"];
   final List<String> pants = [
     "Jogger",
@@ -61,132 +62,64 @@ class ProductProvider extends ChangeNotifier {
     return gender;
   }
 
-  Future<List<Productdetails>> fetchallProducts() async {
+  Future<List<Productdetails>> fetchAllProducts() async {
+    List<Productdetails> allProducts = [];
+
     try {
-      List<Productdetails> products = [];
-
-      // Define arrays for collections and documents
-      List<String> genderList = ["Men", "Women", "Kids"];
-      List<String> categoryList = ["Shirt", "Pant", "T-shirt", "Shorts"];
-      List<String> typeList = [
-        "full sleve",
-        "half sleve",
-        "collar",
-        "round neck",
-        "v-neck"
-      ];
-      List<String> designList = ["Plain", "Printed", "check"];
-
-      List<String> pants = ["Jogger", "Six pocket", "Jeans"];
-
-      // Iterate through each combination of collections and documents
-      for (String gender in genderList) {
-        for (String category in categoryList) {
-          for (String type in typeList) {
-            for (String design in designList) {
-              // Construct the Firestore path
-              QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-                  .collection("clothes")
-                  .doc(gender)
-                  .collection(category)
-                  .doc(type)
-                  .collection(design)
-                  .get();
-
-              // Process the documents in the query snapshot
-              querySnapshot.docs.forEach((doc) {
-                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-                Productdetails product = Productdetails(
-                  id: data['id'].toString(),
-                  name: data['name'].toString(),
-                  brand: data['brand'].toString(),
-                  gender: data['gender'].toString(),
-                  price: data['price'].toString(),
-                  time: data['time'].toString(),
-                  imageUrlList: List<String>.from(data['imageUrl'] ?? []),
-                  quantity: data['Quantity'].toString(),
-                  color: data['color'].toString(),
-                  size: List<String>.from(data['size'] ?? []),
-                );
-                products.add(product);
-                for (int i = 0; i <= products.length; i++) {
-                  print(product.name);
-                }
-              });
+      List<Future<void>> fetchTasks = [];
+      for (String gender in gendersList) {
+        for (String iteam in itemTypesList) {
+          for (String type in types) {
+            for (String design in design) {
+              fetchTasks.add(_fetchProductsForTypeAndDesign(
+                  gender, iteam, type, design, allProducts));
             }
           }
         }
       }
 
-      return products;
+      // Wait for all fetch tasks to complete in parallel
+      await Future.wait(fetchTasks);
+
+      return allProducts;
     } catch (e) {
-      print("Error fetching products: $e");
-      throw e; // Rethrow the error to handle it in the calling code
+      print('Error fetching products: $e');
+      throw e;
     }
   }
 
-  // Future<List<Productdetails>> fetchallProducts() async {
-  //   try {
-  //     List<Productdetails> products = [];
+  Future<void> _fetchProductsForTypeAndDesign(String gender, String iteam,
+      String type, String design, List<Productdetails> allProducts) async {
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection("clothes")
+        .doc(gender)
+        .collection(iteam)
+        .doc(type)
+        .collection(design)
+        .get();
 
-  //     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-  //         .collection("clothes")
-  //         .doc("Men")
-  //         .collection("Shirt")
-  //         .doc("full sleve")
-  //         .collection("Plain")
-  //         .get();
+    for (var doc in snapshot.docs) {
+      final Map<String, dynamic> data = doc.data();
+      final Productdetails product = Productdetails(
+        id: doc.id,
+        name: data['name'] ?? '',
+        brand: data['brand'] ?? '',
+        gender: data['gender'] ?? '',
+        price: data['price'] ?? '',
+        time: data['time'] ?? '',
+        imageUrlList: List<String>.from(data['imageUrl'] ?? []),
+        quantity: data['Quantity'] ?? '',
+        color: data['color'] ?? '',
+        size: List<String>.from(data['size'] ?? []),
+        iteam: data['iteam'] ?? '',
+        design: data['design'] ?? '',
+        type: data['type'] ?? '',
+      );
 
-  //     print('query snaa${querySnapshot.docs}');
-  //     querySnapshot.docs.forEach((doc) {
-  //       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-  //       Productdetails product = Productdetails(
-  //         id: data['id'].toString(),
-  //         name: data['name'].toString(),
-  //         brand: data['brand'].toString(),
-  //         gender: data['gender'].toString(),
-  //         price: data['price'].toString(),
-  //         time: data['time'].toString(),
-  //         imageUrlList: List<String>.from(data['imageUrl'] ?? []),
-  //         quantity: data['Quantity'].toString(),
-  //         color: data['color'].toString(),
-  //         size: List<String>.from(data['size'] ?? []),
-  //       );
-  //       products.add(product);
-  //       print(products[0].brand);
-  //     });
-
-  //     return products;
-  //   } catch (e) {
-  //     print("Error fetching products: $e");
-  //     throw e; // Rethrow the error to handle it in the calling code
-  //   }
-  // }
-
-  // Future<List<Productdetails>> fetchallProducts() async {
-  //   try {
-  //     List<Productdetails> products = [];
-
-  //     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-  //         .collection("clothes")
-  //         .doc("Men")
-  //         .collection("Shirt")
-  //         .doc("full sleve")
-  //         .collection("plain")
-  //         .get();
-
-  //     querySnapshot.docs.forEach((doc) {
-  //       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-  //       Productdetails product = Productdetails.fromJson(data);
-  //       products.add(product);
-  //     });
-
-  //     return products;
-  //   } catch (e) {
-  //     print("Error fetching products: $e");
-  //     throw e; // Rethrow the error to handle it in the calling code
-  //   }
-  // }
+      allProducts.add(product);
+    }
+  }
 
   Future<void> addProductDetailToFireStore(
     TextEditingController productName,
@@ -230,6 +163,9 @@ class ProductProvider extends ChangeNotifier {
       "size": selectedSize,
       "Quantity": quantity.text.trim(),
       "color": color.text.trim(),
+      "category": selectedCategory,
+      "type": design,
+      "desgin": type,
     });
 
     imageUrls.clear();
@@ -276,13 +212,9 @@ class ProductProvider extends ChangeNotifier {
   //     "color": color.text.trim(),
   //   };
 
-  //  Map<String, dynamic> designMAp{
-
-  //  }
-
   //   Map<String, dynamic> typeMap = {
-  //     type: {
-  //       design: [productDetails]
+  //     design: {
+  //       type: [productDetails]
   //     }
   //   };
 
@@ -303,7 +235,92 @@ class ProductProvider extends ChangeNotifier {
   //   // Clear the list of image URLs after adding the product
   //   imageUrls.clear();
   // }
+/////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///import 'package:cloud_firestore/cloud_firestore.dart';
 
+  ///
+  ///
+  ///
+  ///
+  ///
+
+  // Future<List<Productdetails>> fetchAllProducts() async {
+  //   List<Productdetails> allProducts = [];
+
+  //   try {
+  //     for (String type in types) {
+  //       for (String designs in design) {
+  //         final QuerySnapshot<Map<String, dynamic>> snapshot =
+  //             await FirebaseFirestore.instance
+  //                 .collection("clothes")
+  //                 .doc('Men')
+  //                 .collection('Tshirt')
+  //                 .doc(type)
+  //                 .collection(designs)
+  //                 .get();
+
+  //         print('OUSTSIDE SNAP SHORT${snapshot.docChanges}');
+
+  //         for (var doc in snapshot.docs) {
+  //           print('inside snap shot');
+  //           print(snapshot.docs);
+  //           final Map<String, dynamic> data = doc.data();
+  //           final Productdetails product = Productdetails(
+  //             id: doc.id,
+  //             name: data['name'] ?? '',
+  //             brand: data['brand'] ?? '',
+  //             gender: data['gender'] ?? '',
+  //             price: data['price'] ?? '',
+  //             time: data['time'] ?? '',
+  //             imageUrlList: List<String>.from(data['imageUrl'] ?? []),
+  //             quantity: data['Quantity'] ?? '',
+  //             color: data['color'] ?? '',
+  //             size: List<String>.from(data['size'] ?? []),
+  //           );
+
+  //           allProducts.add(product);
+  //         }
+  //       }
+  //     }
+  //     return allProducts;
+  //   } catch (e) {
+  //     print('Error fetching products: $e');
+  //     throw e;
+  //   }
+  // }
+
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
   // Future<void> editProductDetailToFireStore(
   //     String id,
   //     TextEditingController productName,

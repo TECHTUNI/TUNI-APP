@@ -2,17 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatelessWidget {
+  const SplashPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    // Placeholder for checking user authentication
-    // Replace this with your authentication logic
-    bool isLoggedIn =
-        false; // Placeholder, replace with actual authentication check
+    bool isLoggedIn = false;
 
-    // Delay to simulate app loading
-    Future.delayed(Duration(seconds: 2), () {
-      // Navigator.of(context).pushReplacementNamed(isLoggedIn ? '/' : '/login');
-
+    Future.delayed(const Duration(seconds: 2), () {
       if (FirebaseAuth.instance.currentUser?.uid != null) {
         Navigator.of(context).pushReplacementNamed('/home');
       } else {
@@ -20,7 +16,7 @@ class SplashPage extends StatelessWidget {
       }
     });
 
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: FlutterLogo(size: 200),
       ),

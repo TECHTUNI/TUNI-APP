@@ -19,7 +19,7 @@ class _SideNavPageState extends State<SideNavPage> {
   final color = Colors.grey.shade800;
   List<Widget> pages = [
     const DashBoardPage(),
-    const ProductsPage(),
+    ProductsPage(),
     // CustomersPage(),
     MessagesPage(),
     const SettingsPage()
@@ -69,7 +69,6 @@ class _SideNavPageState extends State<SideNavPage> {
                           const TextStyle(color: Colors.white),
                       labelType: NavigationRailLabelType.all,
                       minWidth: 100,
-                      // leading: ,
                       destinations: const [
                         NavigationRailDestination(
                             icon: Icon(Icons.dashboard),
@@ -77,14 +76,9 @@ class _SideNavPageState extends State<SideNavPage> {
                         NavigationRailDestination(
                             icon: Icon(Icons.propane_outlined),
                             label: Text('Products')),
-                        // NavigationRailDestination(
-                        //     icon: Icon(Icons.person), label: Text('Customers')),
                         NavigationRailDestination(
                             icon: Icon(Icons.shopping_cart),
                             label: Text('Orders')),
-                        // NavigationRailDestination(
-                        //     icon: Icon(Icons.settings),
-                        //     label: Text('Settings')),
                         NavigationRailDestination(
                             icon: Icon(Icons.dashboard), label: Text('Logout')),
                       ],

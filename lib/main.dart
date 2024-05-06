@@ -35,14 +35,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Shak Admin',
         theme: ThemeData(appBarTheme: AppBarTheme(color: Colors.grey.shade500)),
-        // Use SplashPage as the initial route
         initialRoute: '/',
         routes: {
-          // Define route for SplashPage
           '/': (context) => SplashPage(),
-          // Define route for SideNavPage
           '/home': (context) => const SideNavPage(),
-          // Define route for LoginPage
           '/login': (context) => LoginScreen(),
         },
       ),

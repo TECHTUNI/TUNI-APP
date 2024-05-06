@@ -18,7 +18,7 @@ class AddProductToFirestore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productprovider = Provider.of<ProductProvider>(context);
-    productprovider.fetchallProducts();
+    productprovider.fetchAllProducts();
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(

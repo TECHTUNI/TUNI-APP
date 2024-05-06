@@ -9,6 +9,9 @@ class Productdetails {
   final String quantity;
   final String color;
   final List<dynamic> size;
+  final String iteam;
+  final String design;
+  final String type;
 
   Productdetails({
     required this.id,
@@ -21,6 +24,9 @@ class Productdetails {
     required this.quantity,
     required this.color,
     required this.size,
+    required this.iteam,
+    required this.design,
+    required this.type,
   });
 
   factory Productdetails.fromJson(Map<String, dynamic> json) {
@@ -35,6 +41,9 @@ class Productdetails {
       quantity: json['Quantity'] ?? '',
       color: json['color'] ?? '',
       size: json['size'] ?? [],
+      iteam: json['category'] ?? '',
+      design: json['type'] ?? '',
+      type: json['design '] ?? '',
     );
   }
 
